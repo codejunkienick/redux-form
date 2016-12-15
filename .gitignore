@@ -1,3 +1,6 @@
+examples
+scripts
+docs
 .idea
 *.iml
 .nyc_output
