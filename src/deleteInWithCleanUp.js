@@ -3,13 +3,15 @@ import { toPath } from 'lodash'
 const createDeleteInWithCleanUp = ({ deepEqual, empty, getIn, deleteIn, setIn }) => {
 
   const deleteInWithCleanUp = (state, path) => {
+    var result = state;
+    try {
     if (path[ path.length - 1 ] === ']') { // array path
       const pathTokens = toPath(path)
       pathTokens.pop()
       const parent = getIn(state, pathTokens.join('.'))
       return parent ? setIn(state, path, undefined) : state
     }
-    const result = deleteIn(state, path)
+    result = deleteIn(state, path)
     const dotIndex = path.lastIndexOf('.')
     if (dotIndex > 0) {
       const parentPath = path.substring(0, dotIndex)
@@ -19,6 +21,9 @@ const createDeleteInWithCleanUp = ({ deepEqual, empty, getIn, deleteIn, setIn })
           return deleteInWithCleanUp(result, parentPath)
         }
       }
+    }
+    } catch(err) {
+      console.log('[RF ERR]', err);
     }
     return result
   }
